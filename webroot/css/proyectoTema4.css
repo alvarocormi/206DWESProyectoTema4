@@ -1,0 +1,35 @@
+.contenido {
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    padding-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.contenido h2 {
+    text-align: center;
+    font-size: 2.875rem;
+    font-weight: 700;
+    margin-top: 1rem;
+    color: #6b7280;
+}
+
+.contenido p {
+    text-align: center;
+    font-size: 1rem;
+    margin-top: 0rem;
+    color: #6b7280;
+}
+
+.contenido span {
+    margin-top: 1rem;
+    margin-bottom: 0rem;
+    width: 100%;
+    max-width: 45rem;
+    height: 0.15rem;
+    background-color: #cbd5e0;
+}
