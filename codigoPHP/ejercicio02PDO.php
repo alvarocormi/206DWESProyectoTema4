@@ -8,6 +8,8 @@
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
         <link rel="stylesheet" href="../webroot/css/proyectoTema4.css" />
         <link rel="stylesheet" href="../../webroot/css/main.css" />
         <title>Ejercicio 02 PHP PDO</title>
@@ -35,20 +37,21 @@
                     //Crear un objeto PDO pasándole las constantes definidas como parametros.
                     $miDB = new PDO(DSN, USER, PASSWORD);
                     //Ejecutamos una query de consulta de la tabla Departamento.
-                    $resultadoDepartamentos = $miDB->query("select * from Departamento;");
+                    $resultadoDepartamentos = $miDB->query("SELECT * FROM T02_Departamento;");
                     //Imprimir por pantalla el número de registros afectados por la consulta.
                     printf("<p style='color: black;'>Número de registros: %s</p><br>", $resultadoDepartamentos->rowCount());
                     //Cargamos los resultados en un fetchobject().
                     $oDepartamento = $resultadoDepartamentos->fetchObject();
                     //Creamos una tabla en la que imprimiremos el nombre del atributo y el valor del mismo.
-                    echo "<table><thead><tr><th>CodigoDepartamento</th><th>DescripcionDepartamento</th><th>VolumenDeNegocio</th><th>FechaBajaDepartamento</th></tr></thead><tbody>";
+                    echo "<table class='table table-bordered' style='width: 50%;'><thead><tr><th>Codigo</th><th>FechaCreacion</th><th>Descripcion</th><th>VolumenNegocio</th><th>FechaBaja</th></tr></thead><tbody>";
                     while ($oDepartamento != null) {
                         echo "<tr>";
                         //Recorrido de la fila cargada
-                        echo "<td style='text-align: center;'>$oDepartamento->CodDepartamento</td>"; //Obtener los códigos de los departamentos.
-                        echo "<td style='text-align: center;'>$oDepartamento->DescDepartamento</td>"; //Obtener las descripciones de los departamentos.
-                        echo "<td style='text-align: center;'>$oDepartamento->VolumenNegocio</td>"; //Obtener el volumen de negocio de los departamentos. 
-                        echo "<td style='text-align: center;'>$oDepartamento->FechaBaja</td>"; //Obtener la fecha de baja de los departamentos.
+                        echo "<td>$oDepartamento->T02_CodDepartamento</td>"; //Obtener los códigos de los departamentos.
+                        echo "<td>$oDepartamento->T02_FechaCreacionDepartamento</td>"; //Obtener la fehca de creacion los departamentos.
+                        echo "<td>$oDepartamento->T02_DescDepartamento</td>"; //Obtener la descripcion de los departamentos. 
+                        echo "<td>$oDepartamento->T02_VolumenNegocio</td>"; //Obtener el volumen de negocio de los departamentos
+                        echo "<td>$oDepartamento->T02_FechaBajaDepartamento</td>"; //Obtener la fecha de baja de los departamentos.
                         echo "</tr>";
                         $oDepartamento = $resultadoDepartamentos->fetchObject();
                     }

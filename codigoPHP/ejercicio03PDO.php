@@ -9,9 +9,9 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="../webroot/css/proyectoTema4.css" />
-        <link rel="stylesheet" href="../../webroot/css/main.css" />
         <!--Boostrap-->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
         <link rel="stylesheet" href="../../webroot/css/main.css" />
         <title>Ejercicio 03 PHP PDO</title>
     </head>
@@ -30,11 +30,11 @@
                 /**
                  * Ejercicio 03
                  * 
-                 * ormulario para añadir un departamento a la tabla Departamento con validación de entrada
+                 * Formulario para añadir un departamento a la tabla Departamento con validación de entrada
                  * 
-                 * @author Alvaro Cordero Miñambres
+                 * @author Alvaro Cordero Miñambres, Rebeca
                  * @version 1.0 
-                 * @since 07/11/2023
+                 * @since 13/11/2023
                  */
                 //Incluimos la libreria de validacion de formularios
                 require_once('../core/231018libreriaValidacion.php');
@@ -43,147 +43,154 @@
                 //Inicializacion de variables
                 $entradaOK = true; //Indica si todas las respuestas son correctas
                 $aRespuestas = [
-                    'codigo' => '',
-                    'descripcion' => '',
+                    'codDepartamento' => '',
+                    'fechaCreacionDepartamento' => 'now()',
+                    'descDepartamento' => '',
                     'volumenNegocio' => '',
-                    'fechaBaja' => null
-                ]; //Almacena las respuestas
+                    'fechaBaja' => 'null'
+                ];
+                // El array $aErrores almacena los valores que no cumplan los requisitos que se hayan introducido en el formulario
+                // No se incluyen la fecha de creacion ni la fecha de baja porque no se validan 
                 $aErrores = [
-                    'codigo' => '',
-                    'descripcion' => '',
-                    'volumenNegocio' => '',
-                ]; //Almacena los errores
-                // 
-                //Mediante esta consulta SQL insertaremos los campos que nos ha dado el usuario en la abse de datos
-                $sqlInsertarDepartamento = <<< sqlInsertar
-                    INSERT INTO Departamento (CodDepartamento, DescDepartamento, VolumenNegocio) VALUES (:codigo, :descripcion, :volumenNegocio);
-                sqlInsertar;
+                    'codDepartamento' => '',
+                    'descDepartamento' => '',
+                    'volumenNegocio' => ''
+                ];
 
-                
-                //Comprobamos si se ha enviado el formulario
+                // Si el fromulario ha sido rellenado, se valida la entrada
                 if (isset($_REQUEST['enviar'])) {
-                    //Introducimos valores en el array $aErrores si ocurre un error
-                    $aErrores['codigo'] = validacionFormularios::comprobarAlfabetico($_REQUEST['codigo'], 3, 3, 1);
-                    //Sin no hay erorres en el codigo entonces
-                    if ($aErrores['codigo'] == null) {
+                    // VALIDACIONES
+                    // Se comprueba que el valor introducido en el campo 'codDepartamento' sea un valor alfabetico con longitud de 3 caracterres, si no lo es, se añade un mensaje de error al array $aErrores
+                    $aErrores['codDepartamento'] = validacionFormularios::comprobarAlfabetico($_REQUEST['codDepartamento'], 3, 3, 1);
+                    // Se comprueba que el codigo de departamento no exista en la base de datos
+                    if ($aErrores['codDepartamento'] == null) {
                         try {
+                            // Se instancia un objeto tipo PDO que establece la conexion a la base de datos con el usuario especificado
                             $miDB = new PDO(DSN, USER, PASSWORD);
-                            //Preparemos la consulta que nos va a filtrar los departamentos por codigo
-                            $consultaPorCodigo = $miDB->prepare("SELECT * FROM Departamento WHERE CodDepartamento = :codigo");
-                            $consultaPorCodigo->execute([":codigo" => $aRespuestas['codigo']]); //Esto es lo mismo que poner el bindParam
+                            // Se configuran las excepciones
+                            $miDB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                            // Se prepara la consulta que filtra los departamentos por codigo
+                            $consultaPorCodigo = $miDB->prepare('SELECT * FROM T02_Departamento WHERE T02_CodDepartamento = "' . $_REQUEST['codDepartamento'] . '";');
+                            // Se ejecuta la query
+                            $consultaPorCodigo->execute();
                             //Si la consulta devuelve alguna fila añadirmos un error al array errores
                             if ($consultaPorCodigo->rowCount() > 0) {
-                                $aErrores['codigo'] = "El codigo de departamento ya existe";
+                                $aErrores['codDepartamento'] = "Ese codigo de departamento ya existe";
                             }
                         } catch (PDOException $miExcepcionPDO) {
+                            echo $miExcepcionPDO->getCode();
                             echo $miExcepcionPDO->getMessage();
+                        } finally {
+                            unset($miDB);
                         }
                     }
-                    $aErrores = [
-                        'descripcion' => validacionFormularios::comprobarAlfabetico($_REQUEST['descripcion'], 255, 1, 1),
-                        'volumenNegocio' => validacionFormularios::comprobarFloat($_REQUEST['volumenNegocio'], PHP_FLOAT_MAX, -PHP_FLOAT_MAX, 1),
-                    ];
 
-                    //Recorremos el array de errores
+                    // Se comprueba que el valor introducido en el campo 'descDepartamento' sea un valor alfabetico con longitud maxima de 255 caracterres, si no lo es, se añade un mensaje de error al array $aErrores
+                    $aErrores['descDepartamento'] = validacionFormularios::comprobarAlfabetico($_REQUEST['descDepartamento'], 255, 1, 1);
+
+                    // Se comprueba que el valor introducido en el campo 'volumenNegocio' sea un numero real, si no lo es, se añade un mensaje de error al array $aErrores
+                    $aErrores['volumenNegocio'] = validacionFormularios::comprobarFloat($_REQUEST['volumenNegocio'], PHP_FLOAT_MAX, -PHP_FLOAT_MAX, 1);
+
+                    // Se recorre el array de errores 
                     foreach ($aErrores as $campo => $error) {
-                        if ($error == !null) {
-                            //Limpiamos el campos
-                            $entradaOK = false;
+                        // Si existe algun error se cambia el valor de $entradaOK a false y se limpia ese campo
+                        if ($error != null) {
                             $_REQUEST[$campo] = '';
+                            $entradaOK = false;
                         }
                     }
+
+                    // Si el formulario NUNCA ha sido rellenado, se inicializa $entradaOK a false    
                 } else {
-                    $entradaOK = false; //Si no ha pulsado el botón de enviar la validación es incorrecta.
+                    $entradaOK = false;
                 }
 
-                //Si la entrada es Ok almacenamos el valor de la respuesta del usuario en el array $aRespuestas
+                // Si todos los valores intruducidos son correctos, se muestran los campos del formulario y sus respuestas
                 if ($entradaOK) {
-                    //Almacenamos el valor en el array
-                    $aRespuestas = [
-                        'codigo' => $_REQUEST['codigo'],
-                        'descripcion' => $_REQUEST['descripcion'],
-                        'fechaBaja' => null,
-                        'volumenNegocio' => $_REQUEST['volumenNegocio']
-                    ];
+                    // TRATAMIENTO DE DATOS
+                    // Se añaden al array $aRespuestas las respuestas cuando son correctas
+                    $aRespuestas['codDepartamento'] = $_REQUEST['codDepartamento'];
+                    $aRespuestas['descDepartamento'] = $_REQUEST['descDepartamento'];
+                    $aRespuestas['volumenNegocio'] = $_REQUEST['volumenNegocio'];
 
+                    // Se ataca a la base de datos
                     try {
-                        //Establecimiento de la conexion
-                        /*
-                          Instanciamos un objeto PDO y establecemos la conexión
-                          Construccion de la cadena PDO: (ej. 'mysql:host = localhost;
-                          dbname = midb')
-                          host – nombre o dirección IP del servidor
-                          dbname – nombre de la base de datos
-                         */
+                        // Se instancia un objeto tipo PDO que establece la conexion a la base de datos con el usuario especificado
                         $miDB = new PDO(DSN, USER, PASSWORD);
 
-                        //Preparamos la consulta
-                        $resultadoConsulta = $miDB->prepare($sqlInsertarDepartamento);
-                        $resultadoConsulta->bindParam(":codigo", $aRespuestas['codigo'], PDO::PARAM_STR);
-                        $resultadoConsulta->bindParam(":descripcion", $aRespuestas['descripcion'], PDO::PARAM_STR);
-                        $resultadoConsulta->bindParam(":volumenNegocio", $aRespuestas['volumenNegocio'], PDO::PARAM_STR);
-                        // Ejecutando la declaración SQL
-                        if ($resultadoConsulta->execute()) {
-                            echo "Los datos se han insertado correctamente en la tabla Departamento.";
-                            //Si eso no ocurre significa que ha habido un error al insertar los datos en la tabla departamentos
-                        } else {
-                            echo "Hubo un error al insertar los datos en la tabla Departamento.";
-                        }
+                        // SOLUCION CON EXEC()
+                        // Se almacena el resultado de la consulta de insercion
 
-                        //Creamos la consulta que va a mostrar los datos de la tabla Departamento
-                        $resultadoDepartamentos = $miDB->query("select * from Departamento;");
+                        $numRegistros = $miDB->exec('insert into T02_Departamento values ("' . $aRespuestas['codDepartamento'] . '",' . $aRespuestas['fechaCreacionDepartamento'] . ',"' . $aRespuestas['descDepartamento'] . '",' . $aRespuestas['volumenNegocio'] . ',' . $aRespuestas['fechaBaja'] . ');');
+                        // Se almacena el resultado de la consulta select
+                        $resultadoConsulta = $miDB->query('select * from T02_Departamento');
 
-                        //Cargamos los resultados en un fetchobject().
-                        $mostrarDepartamento = $resultadoDepartamentos->fetchObject();
-                        //Creamos una tabla en la que imprimiremos el nombre del atributo y el valor del mismo.
-                        echo "<table><thead><tr><th>CodigoDepartamento</th><th>DescripcionDepartamento</th><th>VolumenDeNegocio</th><th>FechaBajaDepartamento</th></tr></thead><tbody>";
-                        while ($mostrarDepartamento != null) {
+                        // SOLUCION CON PREPARE()
+                        // Se inicializa la consulta de insercion
+                        //$consulta = 'INSERT INTO Departamento VALUES ("'.$aRespuestas['codDepartamento'].'","'.$aRespuestas['fechaCreacionDepartamento'].'",'.$aRespuestas['descDepartamento'].','.$aRespuestas['volumenNegocio'].','.$aRespuestas['fechaBaja'].')';
+                        // Se almacena el resultado de la consulta
+                        //$resultadoConsultaPrepare = $miDB->prepare($consulta);
+                        // Se ejecuta la consulta
+                        //$resultadoConsultaPrepare->execute();
+                        // Se almacena el resultado de la consulta select
+                        //$resultadoConsulta = $miDB->prepare('select * from Departamento');
+                        // Se ejecuta la query de seleccion
+                        //$resultadoConsulta->execute();
+                        //Se almacena el numero de filas afectadas
+                        //Se muestra por pantalla el numero de tuplas de la tabla departamentos
+                        printf("<p style='color: black;'>Número de registros: %s</p><br>", $resultadoConsulta->rowCount());
+
+                        // Se crea una tabla para imprimir las tuplas
+                        echo "<table class='table table-bordered' style='width: 50%;'><thead><tr><th>Codigo</th><th>FechaCreacion</th><th>Descripcion</th><th>VolumenNegocio</th><th>FechaBaja</th></tr></thead><tbody>";
+                        // Se instancia un objeto tipo PDO que almacena cada fila de la consulta
+                        while ($oDepartamento = $resultadoConsulta->fetchObject()) {
                             echo "<tr>";
                             //Recorrido de la fila cargada
-                            echo "<td style='text-align: center;
-                                '>$mostrarDepartamento->CodDepartamento</td>"; //Obtener los códigos de los departamentos.
-                            echo "<td style='text-align: center;
-                                '>$mostrarDepartamento->DescDepartamento</td>"; //Obtener las descripciones de los departamentos.
-                            echo "<td style='text-align: center;
-                                '>$mostrarDepartamento->VolumenNegocio</td>"; //Obtener el volumen de negocio de los departamentos. 
-                            echo "<td style='text-align: center;
-                                '>$mostrarDepartamento->FechaBaja</td>"; //Obtener la fecha de baja de los departamentos.
+                            echo "<td>$oDepartamento->T02_CodDepartamento</td>"; //Obtener los códigos de los departamentos.
+                            echo "<td>$oDepartamento->T02_FechaCreacionDepartamento</td>"; //Obtener la fehca de creacion los departamentos.
+                            echo "<td>$oDepartamento->T02_DescDepartamento</td>"; //Obtener la descripcion de los departamentos. 
+                            echo "<td>$oDepartamento->T02_VolumenNegocio</td>"; //Obtener el volumen de negocio de los departamentos
+                            echo "<td>$oDepartamento->T02_FechaBajaDepartamento</td>"; //Obtener la fecha de baja de los departamentos.
                             echo "</tr>";
-                            $mostrarDepartamento = $resultadoDepartamentos->fetchObject();
                         }
                         echo "</tbody></table>";
 
-                        //Mediante PDOExprecion controlamos los errores
-                    } catch (PDOException $excepcion) {
-                        echo 'Error: ' . $excepcion->getMessage() . "<br>"; //Obtiene el valor de un atributo
-                        echo 'Código de error: ' . $excepcion->getCode() . "<br>"; // Establece el valor de un atributo
-                    } finally {
+                        // Se cierra la conexion con la base de datos
                         unset($miDB);
+                    } catch (PDOException $excepcion) {
+                        echo 'Error: ' . $excepcion->getMessage() . "<br>";
+                        echo 'Código de error: ' . $excepcion->getCode() . "<br>";
                     }
+
+                    // Si no son correctos los valores de entrada, se muestra el formulario    
                 } else {
                     ?>
                     <form name="formulario" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" class="form-check-inline" style="width: 100%; position: fixed; top: 250px; left: 42%">
                         <div>
                             <label for="codigo">CodDepartamento: </label>
-                            <input type="text" style="background-color: #fcfbc2"; id="codigo" name="codigo" value="<?php echo (isset($_REQUEST['codigo']) ? $_REQUEST['codigo'] : ''); ?>">
-                            <?php echo ($aErrores['codigo'] != null ? "<span style='color:red;
-                                padding: 0;
-                                margin: 0;
-                                '>" . $aErrores['codigo'] . "</span>" : ''); ?>
+                            <input type="text" name="codDepartamento" style="background-color: #fcfbc2;" id="codDepartamento" class="iObligatorio" value="<?php echo(isset($_REQUEST['codDepartamento']) ? $_REQUEST['codDepartamento'] : '') ?>">
+                            <?php echo ($aErrores['codDepartamento'] != null ? "<span style='color:red'>" . $aErrores['codDepartamento'] . "</span>" : null); ?>
+                            <br><br>
+
+                            <label for="fechaCreacion">FechaCreacion:  </label>
+                            <input type="text" name="fechaCreacionDepartamento" style="background-color: #D2D2D2" id="fechaCreacionDepartamento" value="<?php echo($oFecha = date('Y-m-d H:i:s')) ?>" disabled>
                             <br><br>
 
                             <label for="descripcion" style="margin-top: 5px;">DescDepartamento: </label>
-                            <input type="text" style="background-color: #fcfbc2;" id="descripcion" name="descripcion" value="<?php echo (isset($_REQUEST['descripcion']) ? $_REQUEST['descripcion'] : ''); ?>">
-                            <?php echo ($aErrores['descripcion'] != null ? "<span style='color:red'>" . $aErrores['descripcion'] . "</span>" : null); ?>
-                            <br><br>
-                            <label for="fechaBaja" style="margin-top: 5px;">FechaBaja: </label>
-                            <input type="text"  style="background-color: #D2D2D2"  id="fechaBaja" name="fechaBaja"  disabled>
+                            <input type="text" name="descDepartamento" style="background-color: #fcfbc2;" id="descDepartamento" class="iObligatorio" value="<?php echo(isset($_REQUEST['descDepartamento']) ? $_REQUEST['descDepartamento'] : '') ?>">
+                            <?php echo ($aErrores['descDepartamento'] != null ? "<span style='color:red'>" . $aErrores['descDepartamento'] . "</span>" : null); ?>
                             <br><br>
 
                             <label for="volumenNegocio" style="margin-top: 5px;">VolumenNegocio: </label>
-                            <input type="text" style="background-color: #fcfbc2;" " id="volumenNegocio" name="volumenNegocio" value="<?php echo (isset($_REQUEST['volumenNegocio']) ? $_REQUEST['volumenNegocio'] : ''); ?>">
+                            <input type="text" name="volumenNegocio" id="volumenNegocio" style="background-color: #fcfbc2;" class="iObligatorio" value="<?php echo(isset($_REQUEST['volumenNegocio']) ? $_REQUEST['volumenNegocio'] : '') ?>">
                             <?php echo ($aErrores['volumenNegocio'] != null ? "<span style='color:red'>" . $aErrores['volumenNegocio'] . "</span>" : null); ?>
                             <br><br>
+
+                            <label for="fechaBaja" style="margin-top: 5px;">FechaBaja: </label>
+                            <input type="text"  style="background-color: #D2D2D2"  id="FechaBaja" name="fechaBaja"  value="<?php echo('') ?>" disabled>
+                            <br><br>
+
+
                             <input type="submit" value="Enviar" name="enviar">
                         </div>
                     </form>

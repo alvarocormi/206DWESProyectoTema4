@@ -44,18 +44,16 @@
                 //Inicializacion de variables
                 $entradaOK = true; //Indica si todas las respuestas son correctas
                 $aRespuestas = [
-                    'descripcion' => '',
+                    'DescDepartamento' => '',
                 ]; //Almacena las respuestas
                 $aErrores = [
-                    'descripcion' => '',
+                    'DescDepartamento' => '',
                 ]; //Almacena los errores
-                
-
                 //Comprobamos si se ha enviado el formulario
                 if (isset($_REQUEST['enviar'])) {
                     //Introducimos valores en el array $aErrores si ocurre un error
                     $aErrores = [
-                        'descripcion' => validacionFormularios::comprobarAlfabetico($_REQUEST['descripcion'], 255, 1, 1),
+                        'DescDepartamento' => validacionFormularios::comprobarAlfabetico($_REQUEST['DescDepartamento'], 255, 1, 1),
                     ];
 
                     //Recorremos el array de errores
@@ -64,9 +62,9 @@
                             //Limpiamos el campos
                             $entradaOK = false;
                             $_REQUEST[$campo] = '';
-                        //Si ha dado un error la respuesta pasa a valer el valor que ha introducido el usuario
+                            //Si ha dado un error la respuesta pasa a valer el valor que ha introducido el usuario
                         } else {
-                            $aRespuestas['descripcion'] = $_REQUEST['descripcion'];
+                            $aRespuestas['DescDepartamento'] = $_REQUEST['DescDepartamento'];
                         }
                     }
                 } else {
@@ -77,7 +75,7 @@
                 if ($entradaOK) {
                     //Almacenamos el valor en el array
                     $aRespuestas = [
-                        'descripcion' => $_REQUEST['descripcion'],
+                        'DescDepartamento' => $_REQUEST['DescDepartamento'],
                     ];
 
                     try {
@@ -91,22 +89,23 @@
                         $miDB = new PDO(DSN, USER, PASSWORD);
 
                         //Preparamos la consulta
-                        $resultadoConsulta = $miDB->query("select * from Departamento where DescDepartamento like'%$aRespuestas[descripcion]%';");
+                        $resultadoConsulta = $miDB->query("select * from T02_Departamento where T02_DescDepartamento like'%$aRespuestas[DescDepartamento]%';");
                         // Ejecutando la declaración SQL
-                        if ($resultadoConsulta->rowCount()==0) {
+                        if ($resultadoConsulta->rowCount() == 0) {
                             echo "No existen departamentos con esa descripcion";
                         }
                         //Cargamos los resultados en un fetchobject().
                         $oDepartamento = $resultadoConsulta->fetchObject();
                         //Creamos una tabla en la que imprimiremos el nombre del atributo y el valor del mismo.
-                        echo "<table><thead><tr><th>CodigoDepartamento</th><th>DescripcionDepartamento</th><th>VolumenDeNegocio</th><th>FechaBajaDepartamento</th></tr></thead><tbody>";
+                         echo "<table><thead><tr><th>Codigo</th><th>FechaCreacion</th><th>Descripcion</th><th>VolumenNegocio</th><th>FechaBaja</th></tr></thead><tbody>";
                         while ($oDepartamento != null) {
                             echo "<tr>";
                             //Recorrido de la fila cargada
-                            echo "<td style='text-align: center;'>$oDepartamento->CodDepartamento</td>"; //Obtener los códigos de los departamentos.
-                            echo "<td style='text-align: center;'>$oDepartamento->DescDepartamento</td>"; //Obtener las descripciones de los departamentos.
-                            echo "<td style='text-align: center;'>$oDepartamento->VolumenNegocio</td>"; //Obtener el volumen de negocio de los departamentos. 
-                            echo "<td style='text-align: center;'>$oDepartamento->FechaBaja</td>"; //Obtener la fecha de baja de los departamentos.
+                            echo "<td style='text-align: center;'>$oDepartamento->T02_CodDepartamento</td>"; //Obtener los códigos de los departamentos.
+                            echo "<td style='text-align: center;'>$oDepartamento->T02_FechaCreacionDepartamento</td>"; //Obtener la fehca de creacion los departamentos.
+                            echo "<td style='text-align: center;'>$oDepartamento->T02_DescDepartamento</td>"; //Obtener la descripcion de los departamentos. 
+                            echo "<td style='text-align: center;'>$oDepartamento->T02_VolumenNegocio</td>"; //Obtener el volumen de negocio de los departamentos
+                            echo "<td style='text-align: center;'>$oDepartamento->T02_FechaBajaDepartamento</td>"; //Obtener la fecha de baja de los departamentos.
                             echo "</tr>";
                             $oDepartamento = $resultadoConsulta->fetchObject();
                         }
@@ -121,11 +120,11 @@
                     }
                 } else {
                     ?>
-                    <form name="formulario" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" class="form-check-inline" style="width: 100%; position: fixed; top: 250px; left: 42%">
+                    <form name="formulario" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" class="form-check-inline" style="width: 100%; position: fixed; top: 250px; left: 38%">
                         <div>
-                            <label for="descripcion" style="margin-top: 5px;">Buscar departamento:  </label>
-                            <input type="text" style="background-color: #fcfbc2;" id="descripcion" name="descripcion" value="<?php echo (isset($_REQUEST['descripcion']) ? $_REQUEST['descripcion'] : ''); ?>">
-                            <?php echo ($aErrores['descripcion'] != null ? "<span style='color:red'>" . $aErrores['descripcion'] . "</span>" : null); ?>
+                            <label for="DescDepartamento" style="margin-top: 5px;">Buscar departamento:  </label>
+                            <input type="text" id="DescDepartamento" name="DescDepartamento" value="<?php echo (isset($_REQUEST['DescDepartamento']) ? $_REQUEST['DescDepartamento'] : ''); ?>">
+                            <?php echo ($aErrores['DescDepartamento'] != null ? "<span style='color:red'>" . $aErrores['DescDepartamento'] . "</span>" : null); ?>
                             <input type="submit" value="Buscar" name="enviar">
                         </div>
                     </form>
