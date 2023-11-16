@@ -64,10 +64,12 @@
                     $miDB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Configuramos las excepciones
                     echo ("CONEXIÓN EXITOSA POR PDO"); // Mensaje si la conexión es exitosa
                     //
+                    
+                    $consultaInsercion = "INSERT INTO T02_Departamento(T02_CodDepartamento, T02_FechaCreacionDepartamento, T02_DescDepartamento, T02_VolumenNegocio, T02_FechaBajaDepartamento) VALUES (:CodDepartamento, :FechaCreacion, :DescDepartamento, :VolumenNegocio, :FechaBaja)";
+
                     // Iniciamos una transaccion
                     $miDB->beginTransaction();
                     // Consultas SQL de inserción 
-                    $consultaInsercion = "INSERT INTO T02_Departamento(T02_CodDepartamento, T02_FechaCreacionDepartamento, T02_DescDepartamento, T02_VolumenNegocio, T02_FechaBajaDepartamento) VALUES (:CodDepartamento, :FechaCreacion, :DescDepartamento, :VolumenNegocio, :FechaBaja)";
                     //Preparamos la consulta
                     $resultadoConsultaInsercion = $miDB->prepare($consultaInsercion);
 
@@ -118,7 +120,7 @@
                          */
                         echo ("<tbody>");
                         while ($oDepartartamento = $resultadoConsultaPreparada->fetchObject()) {
-                          echo ("<tr>");
+                            echo ("<tr>");
                             echo ("<td>" . $oDepartartamento->T02_CodDepartamento . "</td>");
                             echo ("<td>" . $oDepartartamento->T02_FechaCreacionDepartamento . "</td>");
                             echo ("<td>" . $oDepartartamento->T02_DescDepartamento . "</td>");

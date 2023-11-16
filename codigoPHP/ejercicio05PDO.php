@@ -14,7 +14,6 @@
         <title>Ejercicio 05 PHP PDO</title>
     </head>
 
-
     <body>
         <header>
             <div class="daw">
@@ -31,6 +30,7 @@
                  * @version 1.0
                  * @since 08/11/2023
                  */
+                
                 // Incluyo la libreria de validación para comprobar los campos
                 require_once '../core/231018libreriaValidacion.php';
                 // Incluyo la configuración de conexión a la BD
@@ -44,6 +44,7 @@
                     echo ("<div>CONEXIÓN EXITOSA POR PDO</div><br><br>"); // Mensaje si la conexión es exitosa
                     // CONSULTAS Y TRANSACCION
                     $miDB->beginTransaction(); // Deshabilitamos el modo autocommit
+                    
                     // Consultas SQL de inserción 
                     $consultaInsercion1 = "INSERT INTO T02_Departamento (T02_CodDepartamento, T02_FechaCreacionDepartamento, T02_DescDepartamento, T02_VolumenNegocio, T02_FechaBajaDepartamento)VALUES ('IOP', '2023-11-17 08:15:00', 'Departamento de Finanzas', 350000.0, NULL);";
                     $consultaInsercion2 = "INSERT INTO T02_Departamento (T02_CodDepartamento, T02_FechaCreacionDepartamento, T02_DescDepartamento, T02_VolumenNegocio, T02_FechaBajaDepartamento)VALUES ('PÑM', '2023-11-18 10:30:00', 'Departamento de Logística', 280000.0, NULL);";

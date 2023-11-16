@@ -9,9 +9,10 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="../webroot/css/proyectoTema4.css" />
-        <link rel="stylesheet" href="../../webroot/css/main.css" />
         <!--Boostrap-->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+              integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        <link rel="stylesheet" href="../../webroot/css/main.css" />
         <title>Ejercicio 04 PHP PDO</title>
     </head>
 
@@ -37,10 +38,12 @@
                  * @version 1.0 
                  * @since 07/11/2023
                  */
+                
                 //Incluimos la libreria de validacion de formularios
                 require_once('../core/231018libreriaValidacion.php');
                 //Incluimos la configuracion de la base de datos
                 require_once '../conf/confDB.php';
+                
                 //Inicializacion de variables
                 $entradaOK = true; //Indica si todas las respuestas son correctas
                 $aRespuestas = [
@@ -53,7 +56,7 @@
                 if (isset($_REQUEST['enviar'])) {
                     //Introducimos valores en el array $aErrores si ocurre un error
                     $aErrores = [
-                        'DescDepartamento' => validacionFormularios::comprobarAlfabetico($_REQUEST['DescDepartamento'], 255, 1, 1),
+                        'DescDepartamento' => validacionFormularios::comprobarAlfabetico($_REQUEST['DescDepartamento'], 255, 1, 0),
                     ];
 
                     //Recorremos el array de errores
@@ -92,25 +95,26 @@
                         $resultadoConsulta = $miDB->query("select * from T02_Departamento where T02_DescDepartamento like'%$aRespuestas[DescDepartamento]%';");
                         // Ejecutando la declaración SQL
                         if ($resultadoConsulta->rowCount() == 0) {
-                            echo "No existen departamentos con esa descripcion";
+                            $aErrores['DescDepartamento'] = "No existen departamentos con esa descripcion";   
                         }
                         //Cargamos los resultados en un fetchobject().
                         $oDepartamento = $resultadoConsulta->fetchObject();
                         //Creamos una tabla en la que imprimiremos el nombre del atributo y el valor del mismo.
-                         echo "<table><thead><tr><th>Codigo</th><th>FechaCreacion</th><th>Descripcion</th><th>VolumenNegocio</th><th>FechaBaja</th></tr></thead><tbody>";
+                        // Se crea una tabla para imprimir las tuplas
+                        echo "<table class='table table-bordered' style='width: 55%; margin-top: 70px;'><thead><tr><th>Codigo</th><th>FechaCreacion</th><th>Descripcion</th><th>VolumenNegocio</th><th>FechaBaja</th></tr></thead><tbody>";
+                        // Se instancia un objeto tipo PDO que almacena cada fila de la consulta
                         while ($oDepartamento != null) {
                             echo "<tr>";
                             //Recorrido de la fila cargada
-                            echo "<td style='text-align: center;'>$oDepartamento->T02_CodDepartamento</td>"; //Obtener los códigos de los departamentos.
-                            echo "<td style='text-align: center;'>$oDepartamento->T02_FechaCreacionDepartamento</td>"; //Obtener la fehca de creacion los departamentos.
-                            echo "<td style='text-align: center;'>$oDepartamento->T02_DescDepartamento</td>"; //Obtener la descripcion de los departamentos. 
-                            echo "<td style='text-align: center;'>$oDepartamento->T02_VolumenNegocio</td>"; //Obtener el volumen de negocio de los departamentos
-                            echo "<td style='text-align: center;'>$oDepartamento->T02_FechaBajaDepartamento</td>"; //Obtener la fecha de baja de los departamentos.
+                            echo "<td>$oDepartamento->T02_CodDepartamento</td>"; //Obtener los códigos de los departamentos.
+                            echo "<td>$oDepartamento->T02_FechaCreacionDepartamento</td>"; //Obtener la fehca de creacion los departamentos.
+                            echo "<td>$oDepartamento->T02_DescDepartamento</td>"; //Obtener la descripcion de los departamentos. 
+                            echo "<td>$oDepartamento->T02_VolumenNegocio</td>"; //Obtener el volumen de negocio de los departamentos
+                            echo "<td>$oDepartamento->T02_FechaBajaDepartamento</td>"; //Obtener la fecha de baja de los departamentos.
                             echo "</tr>";
                             $oDepartamento = $resultadoConsulta->fetchObject();
                         }
                         echo "</tbody></table>";
-
                         //Mediante PDOExprecion controlamos los errores
                     } catch (PDOException $excepcion) {
                         echo 'Error: ' . $excepcion->getMessage() . "<br>"; //Obtiene el valor de un atributo
@@ -118,20 +122,17 @@
                     } finally {
                         unset($miDB);
                     }
-                } else {
-                    ?>
-                    <form name="formulario" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" class="form-check-inline" style="width: 100%; position: fixed; top: 250px; left: 38%">
-                        <div>
-                            <label for="DescDepartamento" style="margin-top: 5px;">Buscar departamento:  </label>
-                            <input type="text" id="DescDepartamento" name="DescDepartamento" value="<?php echo (isset($_REQUEST['DescDepartamento']) ? $_REQUEST['DescDepartamento'] : ''); ?>">
-                            <?php echo ($aErrores['DescDepartamento'] != null ? "<span style='color:red'>" . $aErrores['DescDepartamento'] . "</span>" : null); ?>
-                            <input type="submit" value="Buscar" name="enviar">
-                        </div>
-                    </form>
-
-                    <?php
-                }
+                } //Despues de que se ejecute el codigo anterioir mostramos pase lo que pase el formulario
                 ?>
+                <form name="formulario" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" class="form-check-inline" style="width: 100%; position: fixed; top: 250px; left: 38%">
+                    <div>
+                        <label for="DescDepartamento" style="margin-top: 5px;">Buscar departamento:  </label>
+                        <input type="text" id="DescDepartamento" name="DescDepartamento" value="<?php echo (isset($_REQUEST['DescDepartamento']) ? $_REQUEST['DescDepartamento'] : ''); ?>">
+                        <input type="submit" value="Buscar" name="enviar">
+                        <?php echo ($aErrores['DescDepartamento'] != null ? "<span style='color:red'>" . $aErrores['DescDepartamento'] . "</span>" : null); ?>
+                    </div>
+                </form>
+
 
 
 
