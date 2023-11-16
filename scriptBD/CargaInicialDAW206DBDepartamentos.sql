@@ -7,10 +7,13 @@ START TRANSACTION;
 -- Usamos la base de datos de Departamento
 USE DB206DWESProyectoTema4;
 -- Inserción de datos en la tabla Departamento.
-INSERT INTO Departamento VALUES
-("INF","Departamento de Informatica",null,2200.5),
-("FOL","Departamento de FOL",null,1200.5),
-("HIS","Departamento de Historia",null,200.15),
-("MAT","Departamento de Matemáticas",null,1620.7);
+INSERT INTO T02_Departamento (T02_CodDepartamento, T02_FechaCreacionDepartamento, T02_DescDepartamento, T02_VolumenNegocio, T02_FechaBajaDepartamento)
+VALUES ('001', CURDATE(), 'Departamento de Ventas', 500000.0, NULL);
+INSERT INTO T02_Departamento (T02_CodDepartamento, T02_FechaCreacionDepartamento, T02_DescDepartamento, T02_VolumenNegocio, T02_FechaBajaDepartamento)
+VALUES ('002',CURDATE(), 'Departamento de Marketing', 300000.0, NULL);
+INSERT INTO T02_Departamento (T02_CodDepartamento, T02_FechaCreacionDepartamento, T02_DescDepartamento, T02_VolumenNegocio, T02_FechaBajaDepartamento)
+VALUES ('003', CURDATE(), 'Departamento de Recursos Humanos', 250000.0, NULL);
+INSERT INTO T02_Departamento (T02_CodDepartamento, T02_FechaCreacionDepartamento, T02_DescDepartamento, T02_VolumenNegocio, T02_FechaBajaDepartamento)
+VALUES ('004', CURDATE(), 'Departamento de Desarrollo', 400000.0, NULL);
 
 COMMIT;
