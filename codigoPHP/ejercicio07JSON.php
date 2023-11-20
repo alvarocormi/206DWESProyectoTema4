@@ -124,6 +124,8 @@ try {
             ':VolumenNegocio' => $volumenNegocio,
             ':FechaBajaDepartamento' => $fechaBajaDepartamento
         ];
+
+        $resultadoconsultaInsercion->execute($aRegistros);
     }
 
     //Si la entrada es OK 
