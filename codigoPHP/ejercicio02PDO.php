@@ -31,17 +31,24 @@
                  * @version 1.0 
                  * @since 06/11/2023
                  */
+
+                //Iniciamos un bloque try catch para controlar los errores
                 try {
                     //Declaración de tres constantes que almacenan los valores de la conexión.
                     require_once '../conf/confDB.php';
+
                     //Crear un objeto PDO pasándole las constantes definidas como parametros.
                     $miDB = new PDO(DSN, USER, PASSWORD);
+
                     //Ejecutamos una query de consulta de la tabla Departamento.
                     $resultadoDepartamentos = $miDB->query("SELECT * FROM T02_Departamento;");
+
                     //Imprimir por pantalla el número de registros afectados por la consulta.
                     printf("<p style='color: black;'>Número de registros: %s</p><br>", $resultadoDepartamentos->rowCount());
+
                     //Cargamos los resultados en un fetchobject().
                     $oDepartamento = $resultadoDepartamentos->fetchObject();
+
                     //Creamos una tabla en la que imprimiremos el nombre del atributo y el valor del mismo.
                     echo "<table class='table table-bordered' style='width: 50%;'><thead><tr><th>Codigo</th><th>FechaCreacion</th><th>Descripcion</th><th>VolumenNegocio</th><th>FechaBaja</th></tr></thead><tbody>";
                     while ($oDepartamento != null) {
@@ -53,6 +60,8 @@
                         echo "<td>$oDepartamento->T02_VolumenNegocio</td>"; //Obtener el volumen de negocio de los departamentos
                         echo "<td>$oDepartamento->T02_FechaBajaDepartamento</td>"; //Obtener la fecha de baja de los departamentos.
                         echo "</tr>";
+
+                        //Pasa a la siguiente fila y devuelve el objeto
                         $oDepartamento = $resultadoDepartamentos->fetchObject();
                     }
                     echo "</tbody></table>";

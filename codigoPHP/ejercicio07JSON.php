@@ -44,9 +44,6 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 
-// Declaro una variable de entrada para mostrar o no la tabla con los valores de la BD
-$bEntradaOK = true;
-
 
 //Abro un bloque try catch para tener un mayor control de los errores
 try {
@@ -127,62 +124,51 @@ try {
             ':VolumenNegocio' => $volumenNegocio,
             ':FechaBajaDepartamento' => $fechaBajaDepartamento
         ];
-
-        //Si no se ejecuta la consulta
-        if (!$resultadoconsultaInsercion->execute($aRegistros)) {
-            //La entrada pasara a ser false
-            $bEntradaOK = false;
-
-            //Y saldremos de la condicion
-            break;
-        }
     }
 
     //Si la entrada es OK 
-    if ($bEntradaOK) {
 
-        // Confirma los cambios y los consolida
-        $miDB->commit(); 
-        echo ("<div>Los datos se han insertado correctamente en la tabla Departamento.</div>");
+    // Confirma los cambios y los consolida
+    $miDB->commit();
+    echo ("<div>Los datos se han insertado correctamente en la tabla Departamento.</div>");
 
-        // Escribimos la consulta a preparar
-        $consulta = "SELECT * FROM T02_Departamento";
+    // Escribimos la consulta a preparar
+    $consulta = "SELECT * FROM T02_Departamento";
 
-        //Preparamos la consulta
-        $resultadoConsultaPreparada = $miDB->prepare($consulta);
+    //Preparamos la consulta
+    $resultadoConsultaPreparada = $miDB->prepare($consulta);
 
-        //Ejecutamos la consulta
-        $resultadoConsultaPreparada->execute();
+    //Ejecutamos la consulta
+    $resultadoConsultaPreparada->execute();
 
-         // Creamos una tabla en la que mostraremos la tabla de la BD
-         echo "<table class='table table-bordered' style='width: 50%;'><thead><tr><th>Codigo</th><th>FechaCreacion</th><th>Descripcion</th><th>VolumenNegocio</th><th>FechaBaja</th></tr></thead><tbody>";
+    // Creamos una tabla en la que mostraremos la tabla de la BD
+    echo "<table class='table table-bordered' style='width: 50%;'><thead><tr><th>Codigo</th><th>FechaCreacion</th><th>Descripcion</th><th>VolumenNegocio</th><th>FechaBaja</th></tr></thead><tbody>";
 
-         /* Aqui recorremos todos los valores de la tabla, columna por columna, usando el metodo fetchObject, 
+    /* Aqui recorremos todos los valores de la tabla, columna por columna, usando el metodo fetchObject, 
           * el cual nos indica que los resultados deben ser devueltos como un array asociativo, donde los nombres de las columnas de 
           * la tabla se utilizan como claves (keys) en el array.
           */
-         while ($oDepartartamento = $resultadoConsultaPreparada->fetchObject()) {
-             echo ("<tr>");
-             echo ("<td>" . $oDepartartamento->T02_CodDepartamento . "</td>");
-             echo ("<td>" . $oDepartartamento->T02_FechaCreacionDepartamento . "</td>");
-             echo ("<td>" . $oDepartartamento->T02_DescDepartamento . "</td>");
-             echo ("<td>" . $oDepartartamento->T02_VolumenNegocio . "</td>");
-             echo ("<td>" . $oDepartartamento->T02_FechaBajaDepartamento . "</td>");
-             echo ("</tr>");
-         }
+    while ($oDepartartamento = $resultadoConsultaPreparada->fetchObject()) {
+        echo ("<tr>");
+        echo ("<td>" . $oDepartartamento->T02_CodDepartamento . "</td>");
+        echo ("<td>" . $oDepartartamento->T02_FechaCreacionDepartamento . "</td>");
+        echo ("<td>" . $oDepartartamento->T02_DescDepartamento . "</td>");
+        echo ("<td>" . $oDepartartamento->T02_VolumenNegocio . "</td>");
+        echo ("<td>" . $oDepartartamento->T02_FechaBajaDepartamento . "</td>");
+        echo ("</tr>");
+    }
 
-         echo ("</tbody>");
+    echo ("</tbody>");
 
-        /* Ahora usamos la función 'rowCount()' que nos devuelve el número de filas afectadas por la consulta y 
+    /* Ahora usamos la función 'rowCount()' que nos devuelve el número de filas afectadas por la consulta y 
         * almacenamos el valor en la variable '$numeroDeRegistros'
         */
-        $numeroDeRegistrosConsultaPreparada = $resultadoConsultaPreparada->rowCount();
+    $numeroDeRegistrosConsultaPreparada = $resultadoConsultaPreparada->rowCount();
 
-        // Y mostramos el número de registros
-        echo ("<tfoot ><tr>; color:white;'><td colspan='5'>Número de registros en la tabla Departamento: " . $numeroDeRegistrosConsultaPreparada . '</td></tr></tfoot>');
-        echo ("</table>");
-        echo ("</div>");
-    }
+    // Y mostramos el número de registros
+    echo ("<tfoot ><tr>; color:white;'><td colspan='5'>Número de registros en la tabla Departamento: " . $numeroDeRegistrosConsultaPreparada . '</td></tr></tfoot>');
+    echo ("</table>");
+    echo ("</div>");
 
     //Controlamos las excepciones mediante la clase PDOException
 } catch (PDOException $miExcepcionPDO) {

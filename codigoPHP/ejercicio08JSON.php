@@ -87,11 +87,12 @@ try {
     //Guardo el primer registro como un objeto
     $oResultado = $resultadoConsulta->fetchObject();
 
-    // Inicializamos un array vacío para almacenar todos los departamentos
+    // Declaramos un array vacío para almacenar todos los departamentos
     $aDepartamentos = [];
 
     //Inicializamos el contador
     $numeroDepartamento = 0;
+
     /**
      *Recorro los registros que devuelve la consulta y obtengo por cada valor su resultado
      */
@@ -105,7 +106,8 @@ try {
             'fechaBajaDepartamento' => $oResultado->T02_FechaBajaDepartamento
         ];
 
-        // Añadimos el array $aDepartamento al array $aDepartamentos
+        // Añadimos el array $aDepartamentos al array $aDepartamento
+        array_push($aDepartamentos , $aDepartamento);
         $aDepartamentos[] = $aDepartamento;
 
         //Incremento el contador de departamentos para almacenar informacion el la siguiente posicion        

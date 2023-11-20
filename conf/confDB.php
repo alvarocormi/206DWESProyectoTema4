@@ -8,7 +8,7 @@
 
 //ENTORNO DE EXPLOTACION
 // IP del servidor y Nombre de la base de datos
-define("DSN", 'mysql:host=192.168.0.206;dbname=DB206DWESProyectoTema4');
+define("DSN", 'mysql:host=192.168.20.19;dbname=DB206DWESProyectoTema4');
 // Usuario con el que se conecta 
 define("USER", 'user206DWESProyectoTema4');
 // Contraseña con la que conectarse a la base de datos 
