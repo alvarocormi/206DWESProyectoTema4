@@ -108,7 +108,6 @@ try {
 
         // Añadimos el array $aDepartamentos al array $aDepartamento
         array_push($aDepartamentos , $aDepartamento);
-        $aDepartamentos[] = $aDepartamento;
 
         //Incremento el contador de departamentos para almacenar informacion el la siguiente posicion        
         $numeroDepartamento++;
