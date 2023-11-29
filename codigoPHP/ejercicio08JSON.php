@@ -42,7 +42,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 // Incluyo la configuración de conexión a la BD
-require_once '../conf/confDB.php';
+require_once '../conf/confDBPDOExplotacion.php';
 
 // Declaro una variable de entrada para mostrar o no la tabla con los valores de la BD
 $entradaOK = true;
