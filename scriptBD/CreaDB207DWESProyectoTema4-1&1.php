@@ -5,33 +5,24 @@
  * @copyright: Copyright (c) 2023, Alvaro Cordero Miñambres
  * Script creadcion de la base de datos
  */
-//Incluyo las variables de la conexion
-require_once '../conf/confDB.php';
+
+define('DSN', 'mysql:host=db5014806762.hosting-data.io;dbname=dbs12302430');//Direccion IP del host y nombre de la base de datos
+define('USER', 'dbu1636093');//Nombre del usuario de la base de datos
+define('PASSWORD', 'daw2_Sauces');//Contraseña del usuario de la base de datos
 
 try {
     //Hago la conexion con la base de datos
     $miDB = new PDO(DSN, USER, PASSWORD);
 
-    // Establezco el atributo para la aparicion de errores con ATTR_ERRMODE y le pongo que cuando haya un error se lance una excepcion con ERRMODE_EXCEPTION
-    $miDB ->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
     //Consulta para eliminar las tablas
     $consulta = <<<CONSULTA
-                
-            USE dbs12302430;
-
-
-            CREATE TABLE IF NOT EXISTS T02_Departamento(
+            CREATE TABLE IF NOT EXISTS dbs12302430.T02_Departamento(
                 T02_CodDepartamento VARCHAR(3) PRIMARY KEY,
-                T02_FechaCreacionDepartamento DATETIME NOT NULL,
-                T02_DescDepartamento VARCHAR(255) NOT NULL,
-                T02_VolumenNegocio FLOAT NOT NULL,
-                T02_FechaBajaDepartamento DATETIME NULL
+                T02_DescDepartamento VARCHAR(255),
+                T02_FechaCreacionDepartamento DATETIME,
+                T02_VolumenNegocio FLOAT,
+                T02_FechaBajaDepartamento DATETIME
             )engine=Innodb;
-
-            CREATE USER 'dbu1636093'@'%' IDENTIFIED BY 'P@ssw0rd';
-
-            GRANT ALL ON dbs12302430.* to 'dbu1636093'@'%' 
 
     CONSULTA;
 

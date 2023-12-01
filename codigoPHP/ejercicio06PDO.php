@@ -32,8 +32,6 @@
              * @version 1.0
              * @since 09/11/2023
              */
-            // Incluyo la libreria de validación para comprobar los campos
-            require_once '../core/231018libreriaValidacion.php';
             // Incluyo la configuración de conexión a la BD
             require_once '../conf/confDB.php';
 
@@ -44,15 +42,15 @@
             $aDepartamentosNuevos = [
                 [
                     'T02_CodDepartamento' => '021',
-                    'T02_FechaCreacionDepartamento' => date('Y-m-d'),
                     'T02_DescDepartamento' => 'Departamento de Ventas',
+                    'T02_FechaCreacionDepartamento' => date('Y-m-d'),
                     'T02_VolumenNegocio' => 500000.0,
                     'T02_FechaBajaDepartamento' => null
                 ],
                 [
                     'T02_CodDepartamento' => '022',
-                    'T02_FechaCreacionDepartamento' => date('Y-m-d'),
                     'T02_DescDepartamento' => 'Departamento de Marketing',
+                    'T02_FechaCreacionDepartamento' => date('Y-m-d'),
                     'T02_VolumenNegocio' => 300000.0,
                     'T02_FechaBajaDepartamento' => null
                 ]
@@ -65,7 +63,7 @@
                 echo ("CONEXIÓN EXITOSA POR PDO"); // Mensaje si la conexión es exitosa
                 //
 
-                $consultaInsercion = "INSERT INTO T02_Departamento(T02_CodDepartamento, T02_FechaCreacionDepartamento, T02_DescDepartamento, T02_VolumenNegocio, T02_FechaBajaDepartamento) VALUES (:CodDepartamento, :FechaCreacion, :DescDepartamento, :VolumenNegocio, :FechaBaja)";
+                $consultaInsercion = "INSERT INTO T02_Departamento(T02_CodDepartamento, T02_DescDepartamento, T02_FechaCreacionDepartamento,  T02_VolumenNegocio, T02_FechaBajaDepartamento) VALUES (:CodDepartamento,:DescDepartamento, :FechaCreacion,  :VolumenNegocio, :FechaBaja)";
 
                 // Iniciamos una transaccion
                 $miDB->beginTransaction();
@@ -78,8 +76,8 @@
                     //Creamos un array registros que guardara los valores del anterior array
                     $aResgistros = [
                         ':CodDepartamento' => $aDepartamento['T02_CodDepartamento'],
-                        ':FechaCreacion' => $aDepartamento['T02_FechaCreacionDepartamento'],
                         ':DescDepartamento' => $aDepartamento['T02_DescDepartamento'],
+                        ':FechaCreacion' => $aDepartamento['T02_FechaCreacionDepartamento'],
                         ':VolumenNegocio' => $aDepartamento['T02_VolumenNegocio'],
                         ':FechaBaja' => $aDepartamento['T02_FechaBajaDepartamento'],
                     ];
@@ -100,8 +98,8 @@
                                         <thead>
                                         <tr>
                                             <th>CodDepartamento</th>
-                                            <th>FechaCreacion</th>
                                             <th>DescDepartamento</th>
+                                            <th>FechaCreacion</th>
                                             <th>VolumenNegocio</th>
                                             <th>FechaBaja</th>
                                         </tr>
@@ -115,8 +113,8 @@
                 while ($oDepartartamento = $resultadoConsultaPreparada->fetchObject()) {
                     echo ("<tr>");
                     echo ("<td>" . $oDepartartamento->T02_CodDepartamento . "</td>");
-                    echo ("<td>" . $oDepartartamento->T02_FechaCreacionDepartamento . "</td>");
                     echo ("<td>" . $oDepartartamento->T02_DescDepartamento . "</td>");
+                    echo ("<td>" . $oDepartartamento->T02_FechaCreacionDepartamento . "</td>");
                     echo ("<td>" . $oDepartartamento->T02_VolumenNegocio . "</td>");
                     echo ("<td>" . $oDepartartamento->T02_FechaBajaDepartamento . "</td>");
                     echo ("</tr>");

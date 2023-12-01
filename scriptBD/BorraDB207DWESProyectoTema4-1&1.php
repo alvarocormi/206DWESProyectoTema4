@@ -5,25 +5,23 @@
  * @copyright: Copyright (c) 2023, Alvaro Cordero Miñambres
  * Script borrado de tablas usuario y departamento
  */
-//Incluyo las variables de la conexion
-require_once '../conf/confDB.php';
+
+define('DSN', 'mysql:host=db5014806762.hosting-data.io;dbname=dbs12302430');//Direccion IP del host y nombre de la base de datos
+define('USER', 'dbu1636093');//Nombre del usuario de la base de datos
+define('PASSWORD', 'daw2_Sauces');//Contraseña del usuario de la base de datos
 
 try {
     //Hago la conexion con la base de datos
     $miDB = new PDO(DSN, USER, PASSWORD);
 
-    // Establezco el atributo para la aparicion de errores con ATTR_ERRMODE y le pongo que cuando haya un error se lance una excepcion con ERRMODE_EXCEPTION
-    $miDB ->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     //Consulta para eliminar las tablas
     $consulta = <<<CONSULTA
-                USE dbs12302430;
-                
-                DROP TABLE IF EXISTS dbs12302430.T01_Usuario;
-                DROP TABLE IF EXISTS dbs12302430.T02_Departamento;
+               DROP TABLE IF EXISTS dbs12302430.T02_Departamento;
         CONSULTA;
 
     $miDB->exec($consulta); //Ejecuto la consulta
+
 
     echo 'Tablas eliminadas con éxito.';
 } catch (PDOException $excepcion) {//Codigo que se ejecuta si hay algun error
