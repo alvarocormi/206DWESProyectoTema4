@@ -34,7 +34,7 @@
                 // Incluyo la libreria de validación para comprobar los campos
                 require_once '../core/231018libreriaValidacion.php';
                 // Incluyo la configuración de conexión a la BD
-                require_once '../conf/confDB.php';
+                require_once '../conf/confDBPDOExplotacion.php';
 
                 try {
                     // CONEXION CON LA BD

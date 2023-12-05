@@ -40,7 +40,7 @@
             require_once('../core/231018libreriaValidacion.php');
 
             //Incluimos la configuracion de la base de datos
-            require_once '../conf/confDB.php';
+            require_once '../conf/confDBPDOExplotacion.php';
 
             //Inicializacion de variables
             $entradaOK = true; //Indica si todas las respuestas son correctas

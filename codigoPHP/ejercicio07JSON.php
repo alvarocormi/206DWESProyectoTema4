@@ -24,7 +24,7 @@ require_once("./header.php");
 
 
 // Incluyo la configuración de conexión a la BD
-require_once '../conf/confDB.php';
+require_once '../conf/confDBPDOExplotacion.php';
 /* Funciones para tener un mayor control sobre nuestros errores
 *
 * La función ini_set('display_errors', 1); es una instrucción de configuración en PHP que se utiliza para activar la visualización de 

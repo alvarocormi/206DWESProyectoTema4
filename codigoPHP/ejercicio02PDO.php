@@ -35,7 +35,7 @@
                 //Iniciamos un bloque try catch para controlar los errores
                 try {
                     //Declaración de tres constantes que almacenan los valores de la conexión.
-                    require_once '../conf/confDB.php';
+                    require_once '../conf/confDBPDOExplotacion.php';
 
                     //Crear un objeto PDO pasándole las constantes definidas como parametros.
                     $miDB = new PDO(DSN, USER, PASSWORD);
