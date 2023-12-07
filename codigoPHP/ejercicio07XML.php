@@ -22,7 +22,7 @@ require_once("./header.php");
  */
 
 // Incluyo la configuración de conexión a la BD
-require_once '../conf/confDB.php';
+require_once '../conf/confDBPDO.php';
 
 
 

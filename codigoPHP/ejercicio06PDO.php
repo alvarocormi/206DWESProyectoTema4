@@ -33,7 +33,7 @@
              * @since 09/11/2023
              */
             // Incluyo la configuración de conexión a la BD
-            require_once '../conf/confDB.php';
+            require_once '../conf/confDBPDO.php';
 
             // Declaro una variable de entrada para mostrar o no la tabla con los valores de la BD
             $entradaOK = true;

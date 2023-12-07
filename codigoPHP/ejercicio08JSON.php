@@ -23,7 +23,7 @@ require_once("./header.php");
  */
 
 
-require_once '../conf/confDB.php';
+require_once '../conf/confDBPDO.php';
 
 // Declaro una variable de entrada para mostrar o no la tabla con los valores de la BD
 $entradaOK = true;

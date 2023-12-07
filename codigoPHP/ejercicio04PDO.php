@@ -43,7 +43,7 @@
             require_once('../core/231018libreriaValidacion.php');
 
             //Incluimos la configuracion de la base de datos
-            require_once '../conf/confDB.php';
+            require_once '../conf/confDBPDO.php';
 
 
             //Este array almacena las respuestas
