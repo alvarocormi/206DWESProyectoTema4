@@ -11,10 +11,10 @@ USE DB206DWESProyectoTema4;
 -- Creacion de la tabla Departamento
 CREATE TABLE IF NOT EXISTS T02_Departamento(
    T02_CodDepartamento VARCHAR(3) PRIMARY KEY,
-   T02_FechaCreacionDepartamento DATETIME NOT NULL,
-   T02_DescDepartamento VARCHAR(255) NOT NULL,
-   T02_VolumenNegocio FLOAT NOT NULL,
-   T02_FechaBajaDepartamento DATETIME NULL
+   T02_DescDepartamento VARCHAR(255),
+   T02_FechaCreacionDepartamento DATETIME,
+   T02_VolumenDeNegocio FLOAT,
+   T02_FechaBajaDepartamento DATETIME
 )engine=Innodb;
 
 -- Creación del usuario.

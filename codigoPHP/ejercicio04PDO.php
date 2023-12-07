@@ -109,16 +109,16 @@
 
                 //Creamos una tabla en la que imprimiremos el nombre del atributo y el valor del mismo.
                 // Se crea una tabla para imprimir las tuplas
-                echo "<table class='table table-bordered' style='width: 55%; margin-top: 70px;'><thead><tr><th>Codigo</th><th>FechaCreacion</th><th>Descripcion</th><th>VolumenNegocio</th><th>FechaBaja</th></tr></thead><tbody>";
+                echo "<table class='table table-bordered' style='width: 55%; margin-top: 70px;'><thead><tr><th>Codigo</th><th>Descripcion</th><th>FechaCreacion</th><th>VolumenNegocio</th><th>FechaBaja</th></tr></thead><tbody>";
 
                 // Se instancia un objeto tipo PDO que almacena cada fila de la consulta
                 while ($oDepartamento != null) {
                     echo "<tr>";
                     //Recorrido de la fila cargada
                     echo "<td>$oDepartamento->T02_CodDepartamento</td>"; //Obtener los códigos de los departamentos.
-                    echo "<td>$oDepartamento->T02_FechaCreacionDepartamento</td>"; //Obtener la fehca de creacion los departamentos.
                     echo "<td>$oDepartamento->T02_DescDepartamento</td>"; //Obtener la descripcion de los departamentos. 
-                    echo "<td>$oDepartamento->T02_VolumenNegocio</td>"; //Obtener el volumen de negocio de los departamentos
+                    echo "<td>$oDepartamento->T02_FechaCreacionDepartamento</td>"; //Obtener la fehca de creacion los departamentos.
+                    echo "<td>$oDepartamento->T02_VolumenDeNegocio</td>"; //Obtener el volumen de negocio de los departamentos
                     echo "<td>$oDepartamento->T02_FechaBajaDepartamento</td>"; //Obtener la fecha de baja de los departamentos.
                     echo "</tr>";
 

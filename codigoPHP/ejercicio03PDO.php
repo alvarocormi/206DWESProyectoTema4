@@ -52,8 +52,8 @@
              */
             $aRespuestas = [
                 'codDepartamento' => '',
-                'fechaCreacionDepartamento' => 'now()',
                 'descDepartamento' => '',
+                'fechaCreacionDepartamento' => 'now()',
                 'volumenNegocio' => '',
                 'fechaBaja' => 'null'
             ];
@@ -148,7 +148,7 @@
                     // SOLUCION CON EXEC()
                     // Se almacena el resultado de la consulta de insercion
 
-                    $numRegistros = $miDB->exec('insert into T02_Departamento values ("' . $aRespuestas['codDepartamento'] . '",' . $aRespuestas['fechaCreacionDepartamento'] . ',"' . $aRespuestas['descDepartamento'] . '",' . $aRespuestas['volumenNegocio'] . ',' . $aRespuestas['fechaBaja'] . ');');
+                    $numRegistros = $miDB->exec('insert into T02_Departamento values ("' . $aRespuestas['codDepartamento'] . '","' . $aRespuestas['descDepartamento'] . '",' . $aRespuestas['fechaCreacionDepartamento'] . ',' . $aRespuestas['volumenNegocio'] . ',' . $aRespuestas['fechaBaja'] . ');');
                     // Se almacena el resultado de la consulta select
                     $resultadoConsulta = $miDB->query('select * from T02_Departamento');
 
@@ -169,15 +169,15 @@
                     printf("<p style='color: black;'>Número de registros: %s</p><br>", $resultadoConsulta->rowCount());
 
                     // Se crea una tabla para imprimir las tuplas
-                    echo "<table class='table table-bordered' style='width: 50%;'><thead><tr><th>Codigo</th><th>FechaCreacion</th><th>Descripcion</th><th>VolumenNegocio</th><th>FechaBaja</th></tr></thead><tbody>";
+                    echo "<table class='table table-bordered' style='width: 50%;'><thead><tr><th>Codigo</th><th>Descripcion</th><th>FechaCreacion</th><th>VolumenNegocio</th><th>FechaBaja</th></tr></thead><tbody>";
                     // Se instancia un objeto tipo PDO que almacena cada fila de la consulta
                     while ($oDepartamento = $resultadoConsulta->fetchObject()) {
                         echo "<tr>";
                         //Recorrido de la fila cargada
                         echo "<td>$oDepartamento->T02_CodDepartamento</td>"; //Obtener los códigos de los departamentos.
-                        echo "<td>$oDepartamento->T02_FechaCreacionDepartamento</td>"; //Obtener la fehca de creacion los departamentos.
                         echo "<td>$oDepartamento->T02_DescDepartamento</td>"; //Obtener la descripcion de los departamentos. 
-                        echo "<td>$oDepartamento->T02_VolumenNegocio</td>"; //Obtener el volumen de negocio de los departamentos
+                        echo "<td>$oDepartamento->T02_FechaCreacionDepartamento</td>"; //Obtener la fehca de creacion los departamentos.
+                        echo "<td>$oDepartamento->T02_VolumenDeNegocio</td>"; //Obtener el volumen de negocio de los departamentos
                         echo "<td>$oDepartamento->T02_FechaBajaDepartamento</td>"; //Obtener la fecha de baja de los departamentos.
                         echo "</tr>";
                     }
@@ -186,11 +186,11 @@
                     // Se cierra la conexion con la base de datos
                     unset($miDB);
                 } catch (PDOException $excepcion) {
-                     /**
-                         * Mostramos los mensajes de error
-                         * getMessage() -> Devuelve mensaje de error
-                         * getCode() -> Devuelve el codigo del error
-                         */
+                    /**
+                     * Mostramos los mensajes de error
+                     * getMessage() -> Devuelve mensaje de error
+                     * getCode() -> Devuelve el codigo del error
+                     */
                     echo 'Error: ' . $excepcion->getMessage() . "<br>";
                     echo 'Código de error: ' . $excepcion->getCode() . "<br>";
                 }
@@ -205,16 +205,16 @@
                         <?php echo ($aErrores['codDepartamento'] != null ? "<span style='color:red'>" . $aErrores['codDepartamento'] . "</span>" : null); ?>
                         <br><br>
 
-                        <label for="fechaCreacion">FechaCreacion: </label>
-                        <input type="text" name="fechaCreacionDepartamento" style="background-color: #D2D2D2; width: 160px;" id="fechaCreacionDepartamento" value="<?php echo ($oFecha = date('Y-m-d H:i:s')) ?>" disabled>
-                        <br><br>
-
                         <label for="descripcion" style="margin-top: 5px;">DescDepartamento: </label>
                         <input type="text" name="descDepartamento" style="background-color: #fcfbc2; width: 360px;" id="descDepartamento" class="iObligatorio" value="<?php echo (isset($_REQUEST['descDepartamento']) ? $_REQUEST['descDepartamento'] : '') ?>">
                         <?php echo ($aErrores['descDepartamento'] != null ? "<span style='color:red'>" . $aErrores['descDepartamento'] . "</span>" : null); ?>
                         <br><br>
 
-                        <label for="volumenNegocio" style="margin-top: 5px;">VolumenNegocio: </label>
+                        <label for="fechaCreacion">FechaCreacion: </label>
+                        <input type="text" name="fechaCreacionDepartamento" style="background-color: #D2D2D2; width: 160px;" id="fechaCreacionDepartamento" value="<?php echo ($oFecha = date('Y-m-d H:i:s')) ?>" disabled>
+                        <br><br>
+
+                        <label for="volumenNegocio" style="margin-top: 5px;">VolumenDeNegocio: </label>
                         <input type="text" name="volumenNegocio" id="volumenNegocio" style="background-color: #fcfbc2; width: 120px;" class="iObligatorio" value="<?php echo (isset($_REQUEST['volumenNegocio']) ? $_REQUEST['volumenNegocio'] : '') ?>">
                         <?php echo ($aErrores['volumenNegocio'] != null ? "<span style='color:red'>" . $aErrores['volumenNegocio'] . "</span>" : null); ?>
                         <br><br>

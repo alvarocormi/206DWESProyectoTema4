@@ -1,3 +1,3 @@
 <?php
-	highlight_file('../conf/confDB.php');
+	highlight_file('../conf/confDBPDO.php');
 ?>

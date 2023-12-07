@@ -7,13 +7,34 @@ START TRANSACTION;
 -- Usamos la base de datos de Departamento
 USE DB206DWESProyectoTema4;
 -- Inserción de datos en la tabla Departamento.
-INSERT INTO T02_Departamento (T02_CodDepartamento, T02_FechaCreacionDepartamento, T02_DescDepartamento, T02_VolumenNegocio, T02_FechaBajaDepartamento)
-VALUES ('001', CURDATE(), 'Departamento de Ventas', 500000.0, NULL);
-INSERT INTO T02_Departamento (T02_CodDepartamento, T02_FechaCreacionDepartamento, T02_DescDepartamento, T02_VolumenNegocio, T02_FechaBajaDepartamento)
-VALUES ('002',CURDATE(), 'Departamento de Marketing', 300000.0, NULL);
-INSERT INTO T02_Departamento (T02_CodDepartamento, T02_FechaCreacionDepartamento, T02_DescDepartamento, T02_VolumenNegocio, T02_FechaBajaDepartamento)
-VALUES ('003', CURDATE(), 'Departamento de Recursos Humanos', 250000.0, NULL);
-INSERT INTO T02_Departamento (T02_CodDepartamento, T02_FechaCreacionDepartamento, T02_DescDepartamento, T02_VolumenNegocio, T02_FechaBajaDepartamento)
-VALUES ('004', CURDATE(), 'Departamento de Desarrollo', 400000.0, NULL);
-
+INSERT INTO
+  T02_Departamento (
+    T02_CodDepartamento,
+    T02_DescDepartamento,
+    T02_FechaCreacionDepartamento,
+    T02_VolumenDeNegocio,
+    T02_FechaBajaDepartamento
+  )
+VALUES
+  (
+    'AAA',
+    'Departamento de Ventas',
+    NOW(),
+    100000.50,
+    NULL
+  ),
+  (
+    'AAB',
+    'Departamento de Marketing',
+    NOW(),
+    50089.50,
+    NULL
+  ),
+  (
+    'AAC',
+    'Departamento de Finanzas',
+    NOW(),
+    600.50,
+    '2023-11-13 13:06:00'
+  );
 COMMIT;

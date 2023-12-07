@@ -8,27 +8,27 @@
 
 // CONFIGURACION DE DESARROLLO DE CASA
 
-define("DSN", 'mysql:host=192.168.0.206;dbname=DB206DWESProyectoTema4');
-// Usuario con el que se conecta 
-define("USER", 'user206DWESProyectoTema4');
-// Contraseña con la que conectarse a la base de datos 
-define("PASSWORD", 'P@ssw0rd');
-//MySQLi
-define("HOST", '192.168.0.206');
-define("DBNAME", 'DB206DWESProyectoTema4');
-
-
-
-//ENTORNO DE DESARROLLO CLASE
-// IP del servidor y Nombre de la base de datos
-// define("DSN", 'mysql:host=192.168.20.19;dbname=DB206DWESProyectoTema4');
+// define("DSN", 'mysql:host=192.168.0.206;dbname=DB206DWESProyectoTema4');
 // // Usuario con el que se conecta 
 // define("USER", 'user206DWESProyectoTema4');
 // // Contraseña con la que conectarse a la base de datos 
 // define("PASSWORD", 'P@ssw0rd');
 // //MySQLi
-// define("HOST", '192.168.20.19');
+// define("HOST", '192.168.0.206');
 // define("DBNAME", 'DB206DWESProyectoTema4');
+
+
+
+// ENTORNO DE DESARROLLO CLASE
+// IP del servidor y Nombre de la base de datos
+define("DSN", 'mysql:host=192.168.20.19;dbname=DB206DWESProyectoTema4');
+// Usuario con el que se conecta 
+define("USER", 'user206DWESProyectoTema4');
+// Contraseña con la que conectarse a la base de datos 
+define("PASSWORD", 'P@ssw0rd');
+//MySQLi
+define("HOST", '192.168.20.19');
+define("DBNAME", 'DB206DWESProyectoTema4');
 
 
 //CONFIGURACION DE EXPLOTACION 1&1

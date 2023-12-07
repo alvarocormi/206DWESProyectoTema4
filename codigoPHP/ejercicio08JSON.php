@@ -81,9 +81,9 @@ try {
         //Guardamos los valores en un array asociativo
         $aDepartamento = [
             'codDepartamento' => $oResultado->T02_CodDepartamento,
-            'fechaCreacionDepartamento' => $oResultado->T02_FechaCreacionDepartamento,
             'descDepartamento' => $oResultado->T02_DescDepartamento,
-            'volumenNegocio' => $oResultado->T02_VolumenNegocio,
+            'fechaCreacionDepartamento' => $oResultado->T02_FechaCreacionDepartamento,
+            'volumenNegocio' => $oResultado->T02_VolumenDeNegocio,
             'fechaBajaDepartamento' => $oResultado->T02_FechaBajaDepartamento
         ];
 

@@ -31,7 +31,7 @@
              */
 
             //Implementamos la configuracion de la base de datos
-            require_once '../conf/confDB.php';
+            require_once '../conf/confDBPDO.php';
 
             //Iniciamos un bloque try catch para el control de errores
             try {
