@@ -24,25 +24,7 @@ require_once("./header.php");
 
 
 // Incluyo la configuración de conexión a la BD
-require_once '../conf/confDBPDOExplotacion.php';
-/* Funciones para tener un mayor control sobre nuestros errores
-*
-* La función ini_set('display_errors', 1); es una instrucción de configuración en PHP que se utiliza para activar la visualización de 
-errores en tiempo de ejecución en el navegador web.
-* Mostrará los errores directamente en la página web si ocurren durante la ejecución del script PHP.
-*/
-ini_set('display_errors', 1);
-
-/* Se utiliza para activar la visualización de errores que ocurren durante 
- * el inicio del script, es decir, durante la fase de arranque (startup) del proceso PHP. */
-ini_set('display_startup_errors', 1);
-
-/**
- * Establece el nivel de error que se informará durante la ejecución de un script PHP. 
- * En este caso, E_ALL es una constante que representa todos los tipos de errores posibles en PHP.
- */
-error_reporting(E_ALL);
-
+require_once '../conf/confDB.php';
 
 
 //Abro un bloque try catch para tener un mayor control de los errores

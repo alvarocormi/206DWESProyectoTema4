@@ -31,7 +31,7 @@
              */
 
             //Importamos la configuracion de la base de datos
-            require_once '../conf/confDBPDOExplotacion.php';
+            require_once '../conf/confDB.php';
 
             // La variable $attributes almacena los artibutos que se pueden mostrar de una base de datos
             // No se incluyen "PERSISTENT", "PREFETCH" y "TIMEOUT"
