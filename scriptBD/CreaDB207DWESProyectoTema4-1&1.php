@@ -16,14 +16,14 @@ try {
 
     //Consulta para eliminar las tablas
     $consulta = <<<CONSULTA
-        CREATE TABLE IF NOT EXISTS dbs12302430.T02_Departamento(
-            T02_CodDepartamento VARCHAR(3) PRIMARY KEY,
-            T02_DescDepartamento VARCHAR(255),
-            T02_FechaCreacionDepartamento DATETIME,
-            T02_VolumenDeNegocio FLOAT,
-            T02_FechaBajaDepartamento DATETIME
-        )engine=Innodb;
-     
+            CREATE TABLE IF NOT EXISTS dbs12302430.T02_Departamento(
+                T02_CodDepartamento VARCHAR(3) PRIMARY KEY,
+                T02_DescDepartamento VARCHAR(255),
+                T02_FechaCreacionDepartamento DATETIME,
+                T02_VolumenNegocio FLOAT,
+                T02_FechaBajaDepartamento DATETIME
+            )engine=Innodb;
+
     CONSULTA;
 
     $miDB->exec($consulta); //Ejecuto la consulta
