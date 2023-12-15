@@ -22,25 +22,9 @@ require_once("./header.php");
  */
 
 // Incluyo la configuración de conexión a la BD
-require_once '../conf/confDB.php';
+require_once '../conf/confDBPDO.php';
 
 
-/** Funciones para tener un mayor control sobre nuestros errores
- * La función ini_set('display_errors', 1); es una instrucción de configuración en PHP que se utiliza para activar la visualización de 
-errores en tiempo de ejecución en el navegador web.
- Mostrará los errores directamente en la página web si ocurren durante la ejecución del script PHP.
- */
-ini_set('display_errors', 1);
-
-/* Se utiliza para activar la visualización de errores que ocurren durante 
-* el inicio del script, es decir, durante la fase de arranque (startup) del proceso PHP. */
-ini_set('display_startup_errors', 1);
-
-/**
- * Establece el nivel de error que se informará durante la ejecución de un script PHP. 
- * En este caso, E_ALL es una constante que representa todos los tipos de errores posibles en PHP.
- */
-error_reporting(E_ALL);
 
 //Abro un bloque try catch para tener un mayor control de los errores
 try {
@@ -59,9 +43,9 @@ try {
      */
     $consultaInsercion = <<<SQL
     INSERT T02_Departamento
-        (T02_CodDepartamento,  T02_FechaCreacionDepartamento ,T02_DescDepartamento, T02_VolumenNegocio, T02_FechaBajaDepartamento) 
+    (T02_CodDepartamento, T02_DescDepartamento, T02_FechaCreacionDepartamento, T02_VolumenDeNegocio, T02_FechaBajaDepartamento)
     VALUES 
-        (:CodDepartamento, :FechaCreacionDepartamento, :DescDepartamento,  :VolumenDeNegocio, :FechaBajaDepartamento);
+    (:CodDepartamento, :DescDepartamento, :FechaCreacionDepartamento, :VolumenDeNegocio, :FechaBajaDepartamento)
     SQL;
 
     //Preparamos la sonculta de inseracion
@@ -90,19 +74,26 @@ try {
          * y cogemos el valor del item mediante el nodeValue
          */
         $codDepartamento = $valor->getElementsByTagName("CodDepartamento")->item(0)->nodeValue;
-        $fechaCreacionDepartamento = $valor->getElementsByTagName("FechaCreacionDepartamento")->item(0)->nodeValue;
         $descDepartamento = $valor->getElementsByTagName("DescDepartamento")->item(0)->nodeValue;
-        $volumenNegocio = $valor->getElementsByTagName("VolumenNegocio")->item(0)->nodeValue;
+        $fechaCreacionDepartamento = $valor->getElementsByTagName("FechaCreacionDepartamento")->item(0)->nodeValue;
+        $volumenDeNegocio = $valor->getElementsByTagName("VolumenDeNegocio")->item(0)->nodeValue;
         $fechaBajaDepartamento = $valor->getElementsByTagName("FechaBajaDepartamento")->item(0)->nodeValue;
+
+        //Si la fecha BajaDepartamentos esta vacia
+        if (empty($fechaBajaDepartamento)) {
+
+            //La ponemos a null
+            $fechaBajaDepartamento = null;
+        }
 
         /**
          * Creamos un array llamado aRegistros que almacena los valores del documento XML 
          */
         $aRegistros = [
             ':CodDepartamento' => $codDepartamento,
-            ':FechaCreacionDepartamento' => $fechaCreacionDepartamento,
             ':DescDepartamento' => $descDepartamento,
-            ':VolumenDeNegocio' => $volumenNegocio,
+            ':FechaCreacionDepartamento' => $fechaCreacionDepartamento,
+            ':VolumenDeNegocio' => $volumenDeNegocio,
             ':FechaBajaDepartamento' => $fechaBajaDepartamento
         ];
 
@@ -131,8 +122,8 @@ try {
             <thead>
             <tr>
                 <th>Codigo de Departamento</th>
-                <th>Fecha de Creacion</th>
                 <th>Descripcion de Departamento</th>
+                <th>Fecha de Creacion</th>
                 <th>Volumen de Negocio</th>
                 <th>Fecha de Baja</th>
             </tr>
@@ -146,9 +137,9 @@ try {
     while ($oDepartamento = $resultadoConsultaPreparada->fetchObject()) {
         echo ("<tr>");
         echo ("<td>" . $oDepartamento->T02_CodDepartamento . "</td>");
-        echo ("<td>" . $oDepartamento->T02_FechaCreacionDepartamento . "</td>");
         echo ("<td>" . $oDepartamento->T02_DescDepartamento . "</td>");
-        echo ("<td>" . $oDepartamento->T02_VolumenNegocio . "</td>");
+        echo ("<td>" . $oDepartamento->T02_FechaCreacionDepartamento . "</td>");
+        echo ("<td>" . $oDepartamento->T02_VolumenDeNegocio . "</td>");
         echo ("<td>" . $oDepartamento->T02_FechaBajaDepartamento . "</td>");
         echo ("</tr>");
     }

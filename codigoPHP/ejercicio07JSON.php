@@ -24,25 +24,7 @@ require_once("./header.php");
 
 
 // Incluyo la configuración de conexión a la BD
-require_once '../conf/confDB.php';
-/* Funciones para tener un mayor control sobre nuestros errores
-*
-* La función ini_set('display_errors', 1); es una instrucción de configuración en PHP que se utiliza para activar la visualización de 
-errores en tiempo de ejecución en el navegador web.
-* Mostrará los errores directamente en la página web si ocurren durante la ejecución del script PHP.
-*/
-ini_set('display_errors', 1);
-
-/* Se utiliza para activar la visualización de errores que ocurren durante 
- * el inicio del script, es decir, durante la fase de arranque (startup) del proceso PHP. */
-ini_set('display_startup_errors', 1);
-
-/**
- * Establece el nivel de error que se informará durante la ejecución de un script PHP. 
- * En este caso, E_ALL es una constante que representa todos los tipos de errores posibles en PHP.
- */
-error_reporting(E_ALL);
-
+require_once '../conf/confDBPDO.php';
 
 
 //Abro un bloque try catch para tener un mayor control de los errores
@@ -87,9 +69,9 @@ try {
      */
     $consultaInsercion = <<<SQL
     INSERT INTO T02_Departamento
-        (T02_CodDepartamento, T02_FechaCreacionDepartamento, T02_DescDepartamento,  T02_VolumenNegocio, T02_FechaBajaDepartamento)
+        (T02_CodDepartamento, T02_DescDepartamento, T02_FechaCreacionDepartamento,   T02_VolumenDeNegocio, T02_FechaBajaDepartamento)
     VALUES
-        (:CodDepartamento, :FechaCreacionDepartamento, :DescDepartamento,  :VolumenNegocio, :FechaBajaDepartamento);
+        (:CodDepartamento, :DescDepartamento, :FechaCreacionDepartamento,  :VolumenNegocio, :FechaBajaDepartamento);
     SQL;
 
 
@@ -103,8 +85,8 @@ try {
     foreach ($aContenidoDecodificadoArchivoJSON as $aDepartamento) {
         // Recorremos los registros que vamos a insertar en la tabla
         $codDepartamento = $aDepartamento['codDepartamento'];
-        $fechaCreacionDepartamento = $aDepartamento['fechaCreacionDepartamento'];
         $descDepartamento = $aDepartamento['descDepartamento'];
+        $fechaCreacionDepartamento = $aDepartamento['fechaCreacionDepartamento'];
         $volumenNegocio = $aDepartamento['volumenNegocio'];
         $fechaBajaDepartamento = $aDepartamento['fechaBajaDepartamento'];
 
@@ -119,8 +101,8 @@ try {
          */
         $aRegistros = [
             ':CodDepartamento' => $codDepartamento,
-            ':FechaCreacionDepartamento' => $fechaCreacionDepartamento,
             ':DescDepartamento' => $descDepartamento,
+            ':FechaCreacionDepartamento' => $fechaCreacionDepartamento,
             ':VolumenNegocio' => $volumenNegocio,
             ':FechaBajaDepartamento' => $fechaBajaDepartamento
         ];
@@ -144,7 +126,7 @@ try {
     $resultadoConsultaPreparada->execute();
 
     // Creamos una tabla en la que mostraremos la tabla de la BD
-    echo "<table class='table table-bordered' style='width: 50%;'><thead><tr><th>Codigo</th><th>FechaCreacion</th><th>Descripcion</th><th>VolumenNegocio</th><th>FechaBaja</th></tr></thead><tbody>";
+    echo "<table class='table table-bordered' style='width: 50%;'><thead><tr><th>Codigo</th><th>Descripcion</th><th>FechaCreacion</th><th>VolumenNegocio</th><th>FechaBaja</th></tr></thead><tbody>";
 
     /* Aqui recorremos todos los valores de la tabla, columna por columna, usando el metodo fetchObject, 
           * el cual nos indica que los resultados deben ser devueltos como un array asociativo, donde los nombres de las columnas de 
@@ -153,9 +135,9 @@ try {
     while ($oDepartartamento = $resultadoConsultaPreparada->fetchObject()) {
         echo ("<tr>");
         echo ("<td>" . $oDepartartamento->T02_CodDepartamento . "</td>");
-        echo ("<td>" . $oDepartartamento->T02_FechaCreacionDepartamento . "</td>");
         echo ("<td>" . $oDepartartamento->T02_DescDepartamento . "</td>");
-        echo ("<td>" . $oDepartartamento->T02_VolumenNegocio . "</td>");
+        echo ("<td>" . $oDepartartamento->T02_FechaCreacionDepartamento . "</td>");
+        echo ("<td>" . $oDepartartamento->T02_VolumenDeNegocio . "</td>");
         echo ("<td>" . $oDepartartamento->T02_FechaBajaDepartamento . "</td>");
         echo ("</tr>");
     }

@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="../../webroot/css/main.css" />
     <!--Boostrap-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <title>Ejercicio 05 PHP PDO</title>
+    <title>Ejercicio 06 PHP PDO</title>
 </head>
 
 
@@ -32,29 +32,27 @@
              * @version 1.0
              * @since 09/11/2023
              */
-            // Incluyo la libreria de validación para comprobar los campos
-            require_once '../core/231018libreriaValidacion.php';
             // Incluyo la configuración de conexión a la BD
-            require_once '../conf/confDB.php';
+            require_once '../conf/confDBPDO.php';
 
             // Declaro una variable de entrada para mostrar o no la tabla con los valores de la BD
             $entradaOK = true;
 
-            //Declaremos el aary e los datos que vamos a insertar
+            // Declaremos el array de los datos que vamos a insertar
             $aDepartamentosNuevos = [
                 [
-                    'T02_CodDepartamento' => '021',
-                    'T02_FechaCreacionDepartamento' => date('Y-m-d'),
-                    'T02_DescDepartamento' => 'Departamento de Ventas',
-                    'T02_VolumenNegocio' => 500000.0,
-                    'T02_FechaBajaDepartamento' => null
+                    'CodDepartamento' => 'IOP',
+                    'DescDepartamento' => 'Departamento de Ventas',
+                    'FechaCreacionDepartamento' => date('Y-m-d H:i:s'),
+                    'VolumenDeNegocio' => 500000.0,
+                    'FechaBajaDepartamento' => null
                 ],
                 [
-                    'T02_CodDepartamento' => '022',
-                    'T02_FechaCreacionDepartamento' => date('Y-m-d'),
-                    'T02_DescDepartamento' => 'Departamento de Marketing',
-                    'T02_VolumenNegocio' => 300000.0,
-                    'T02_FechaBajaDepartamento' => null
+                    'CodDepartamento' => 'NMB',
+                    'DescDepartamento' => 'Departamento de Marketing',
+                    'FechaCreacionDepartamento' => date('Y-m-d H:i:s'),
+                    'VolumenDeNegocio' => 300000.0,
+                    'FechaBajaDepartamento' => null
                 ]
             ];
 
@@ -63,69 +61,79 @@
                 // Establecemos la conexión por medio de PDO
                 $miDB = new PDO(DSN, USER, PASSWORD);
                 echo ("CONEXIÓN EXITOSA POR PDO"); // Mensaje si la conexión es exitosa
-                //
 
-                $consultaInsercion = "INSERT INTO T02_Departamento(T02_CodDepartamento, T02_FechaCreacionDepartamento, T02_DescDepartamento, T02_VolumenNegocio, T02_FechaBajaDepartamento) VALUES (:CodDepartamento, :FechaCreacion, :DescDepartamento, :VolumenNegocio, :FechaBaja)";
-
-                // Iniciamos una transaccion
-                $miDB->beginTransaction();
-                // Consultas SQL de inserción 
-                //Preparamos la consulta
-                $resultadoConsultaInsercion = $miDB->prepare($consultaInsercion);
+                $consultaInsercion = "INSERT INTO T02_Departamento(T02_CodDepartamento, T02_DescDepartamento, T02_FechaCreacionDepartamento, T02_VolumenDeNegocio, T02_FechaBajaDepartamento) "
+                    . "VALUES (:CodDepartamento, :DescDepartamento, :FechaCreacionDepartamento, :VolumenDeNegocio, :FechaBajaDepartamento)";
 
                 //Recorremos el array
                 foreach ($aDepartamentosNuevos as $aDepartamento) {
-                    //Creamos un array registros que guardara los valores del anterior array
-                    $aResgistros = [
-                        ':CodDepartamento' => $aDepartamento['T02_CodDepartamento'],
-                        ':FechaCreacion' => $aDepartamento['T02_FechaCreacionDepartamento'],
-                        ':DescDepartamento' => $aDepartamento['T02_DescDepartamento'],
-                        ':VolumenNegocio' => $aDepartamento['T02_VolumenNegocio'],
-                        ':FechaBaja' => $aDepartamento['T02_FechaBajaDepartamento'],
-                    ];
+                    try {
+                        // Iniciamos una transacción para cada iteración
+                        $miDB->beginTransaction();
+
+                        // Preparamos la consulta
+                        $resultadoConsultaInsercion = $miDB->prepare($consultaInsercion);
+
+                        // Creamos un array registros que guardará los valores del anterior array
+                        $aRegistros = [
+                            ':CodDepartamento' => $aDepartamento['CodDepartamento'],
+                            ':DescDepartamento' => $aDepartamento['DescDepartamento'],
+                            ':FechaCreacionDepartamento' => $aDepartamento['FechaCreacionDepartamento'],
+                            ':VolumenDeNegocio' => $aDepartamento['VolumenDeNegocio'],
+                            ':FechaBajaDepartamento' => $aDepartamento['FechaBajaDepartamento'],
+                        ];
+
+                        // Ejecutamos la consulta con los registros actuales
+                        $resultadoConsultaInsercion->execute($aRegistros);
+
+                        // Confirmamos los cambios y los consolidamos
+                        $miDB->commit();
+
+                    } catch (PDOException $miExcepcionPDO) {
+                        $miDB->rollback(); // Revierte o deshace los cambios en caso de error
+                        $errorExcepcion = $miExcepcionPDO->getCode();
+                        $mensajeExcepcion = $miExcepcionPDO->getMessage();
+
+                        echo ("<div style='color: red'>Hubo un error al insertar los datos en la tabla Departamento.<br></div>");
+                        echo "<span style='color: red'>Error: </span>" . $mensajeExcepcion . "<br>";
+                        echo "<span style='color: red'>Código del error: </span>" . $errorExcepcion;
+                    }
                 }
 
-                // Si la entrada es OK confirmaremos los cambios y ejecutaremos la consulta
+                // Resto del código...
 
-                $miDB->commit(); // Confirma los cambios y los consolida
-                echo ("<br>Los datos se han insertado correctamente en la tabla Departamento!!!.");
+            } catch (PDOException $miExcepcionPDO) {
+                // Manejo de excepciones...
+            }
+            try {
 
                 // Preparamos y ejecutamos la consulta SQL
                 $resultadoConsultaPreparada = $miDB->prepare("SELECT * FROM T02_Departamento");
                 $resultadoConsultaPreparada->execute();
 
                 // Creamos una tabla en la que mostraremos la tabla de la BD
-                echo ("<div class='list-group text-center'>");
-                echo ("<table>
-                                        <thead>
-                                        <tr>
-                                            <th>CodDepartamento</th>
-                                            <th>FechaCreacion</th>
-                                            <th>DescDepartamento</th>
-                                            <th>VolumenNegocio</th>
-                                            <th>FechaBaja</th>
-                                        </tr>
-                                        </thead>");
+                echo "<table class='table table-bordered' style='width: 50%;'><thead><tr><th>Codigo</th><th>Descripcion</th><th>FechaCreacion</th><th>VolumenNegocio</th><th>FechaBaja</th></tr></thead><tbody>";
 
-                /* Aqui recorremos todos los valores de la tabla, columna por columna, usando el metodo fetchObject, 
-                         * el cual nos indica que los resultados deben ser devueltos como un array asociativo, donde los nombres de las columnas de 
-                         * la tabla se utilizan como claves (keys) en el array.
-                         */
+                /* Aquí recorremos todos los valores de la tabla, columna por columna, usando el método fetchObject, 
+                 * el cual nos indica que los resultados deben ser devueltos como un array asociativo, donde los nombres de las columnas de 
+                 * la tabla se utilizan como claves (keys) en el array.
+                 */
                 echo ("<tbody>");
-                while ($oDepartartamento = $resultadoConsultaPreparada->fetchObject()) {
-                    echo ("<tr>");
-                    echo ("<td>" . $oDepartartamento->T02_CodDepartamento . "</td>");
-                    echo ("<td>" . $oDepartartamento->T02_FechaCreacionDepartamento . "</td>");
-                    echo ("<td>" . $oDepartartamento->T02_DescDepartamento . "</td>");
-                    echo ("<td>" . $oDepartartamento->T02_VolumenNegocio . "</td>");
-                    echo ("<td>" . $oDepartartamento->T02_FechaBajaDepartamento . "</td>");
-                    echo ("</tr>");
+                while ($oDepartamento = $resultadoConsultaPreparada->fetchObject()) {
+                    echo "<tr>";
+                    //Recorrido de la fila cargada
+                    echo "<td>$oDepartamento->T02_CodDepartamento</td>"; //Obtener los códigos de los departamentos.
+                    echo "<td>$oDepartamento->T02_DescDepartamento</td>"; //Obtener la descripcion de los departamentos. 
+                    echo "<td>$oDepartamento->T02_FechaCreacionDepartamento</td>"; //Obtener la fecha de creacion los departamentos.
+                    echo "<td>$oDepartamento->T02_VolumenDeNegocio</td>"; //Obtener el volumen de negocio de los departamentos
+                    echo "<td>$oDepartamento->T02_FechaBajaDepartamento</td>"; //Obtener la fecha de baja de los departamentos.
+                    echo "</tr>";
                 }
 
-                echo ("</tbody>");
+                echo "</tbody></table>";
                 /* Ahora usamos la función 'rowCount()' que nos devuelve el número de filas afectadas por la consulta y 
-                         * almacenamos el valor en la variable '$numeroDeRegistros'
-                         */
+                 * almacenamos el valor en la variable '$numeroDeRegistros'
+                 */
                 $numeroDeRegistrosConsultaPreparada = $resultadoConsultaPreparada->rowCount();
                 // Y mostramos el número de registros
                 echo ("<tfoot ><tr style='background-color: #666; color:white;'><td colspan='4'>Número de registros en la tabla Departamento: " . $numeroDeRegistrosConsultaPreparada . '</td></tr></tfoot>');
@@ -138,14 +146,15 @@
                 $errorExcepcion = $miExcepcionPDO->getCode(); // Almacenamos el código del error de la excepción en la variable '$errorExcepcion'
                 $mensajeExcepcion = $miExcepcionPDO->getMessage(); // Almacenamos el mensaje de la excepción en la variable '$mensajeExcepcion'
 
-                echo ("<div style='color: red'>Hubo un error al insertar los datos en la tabla Departamento.<br></div>");
                 echo "<span style='color: red'>Error: </span>" . $mensajeExcepcion . "<br>"; // Mostramos el mensaje de la excepción
                 echo "<span style='color: red'>Código del error: </span>" . $errorExcepcion; // Mostramos el código de la excepción
-                //En culaquier cosa cerramos la sesion
+                //En cualquier caso cerramos la sesión
             } finally {
-                unset($miDB); // El metodo unset sirve para cerrar la sesion con la base de datos
+                unset($miDB); // El método unset sirve para cerrar la sesión con la base de datos
             }
             ?>
+            ?>
+
 
 
         </div>
@@ -163,7 +172,7 @@
                     <path d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293l6-6Z"></path>
                 </svg>
             </a>
-            <a href="https://github.com/alvarocormi" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="#737373" class="bi bi-github" viewBox="0 0 16 16">
+            <a href="https://github.com/alvarocormi/206DWESProyectoTema4" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="#737373" class="bi bi-github" viewBox="0 0 16 16">
                     <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
                 </svg></a>
             <a href="https://es.linkedin.com/in/%C3%A1lvaro-cordero-mi%C3%B1ambres-2a1893233" target="_blank">
